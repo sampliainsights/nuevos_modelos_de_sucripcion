@@ -232,7 +232,7 @@ p{margin:0}
 .clip-fill{display:block;height:100%;width:0;border-radius:999px;background:var(--grad-brand)}
 .clip-foot{display:flex;justify-content:space-between;margin-top:7px;
   font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
-.clip-src{color:var(--n-500)}
+.clip-src{display:none}
 
 /* ---------- recomendaciones ---------- */
 .recos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -274,13 +274,7 @@ footer{padding:34px 0 54px;text-align:center;font-size:12.5px;color:var(--n-500)
 
 @media(max-width:900px){
   .app{flex-direction:column}
-  .sidebar{position:sticky;top:0;width:auto;height:auto;flex-direction:row;align-items:center;
-    gap:10px;padding:10px 12px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}
-  .side-brand{padding:0 6px 0 2px;flex:none}
-  .side-brand .txt{display:none}
-  .side-label,.side-foot{display:none}
-  .nav-i{flex:none;padding:8px}
-  .nav-i .lbl{display:none}
+  .sidebar{display:none}
   .hero{min-height:460px}
   .hero-content{max-width:none}
   .hero::before{background:
@@ -417,7 +411,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 .scrolly .block-figure.meme-off{opacity:0;transform:scale(.97)}
 .meme-timer{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--grad-brand);
   transform-origin:0 50%;transform:scaleX(1)}
-.meme-on .meme-timer{transform:scaleX(0);transition:transform 6s linear .9s}
+.meme-on .meme-timer{transform:scaleX(0);transition:transform var(--meme-secs,6s) linear .9s}
 /* subrayado que se dibuja en la palabra clave de cada titular */
 .scrolly .s-head em,.scrolly .sub-h em{
   background:linear-gradient(90deg,rgba(90,130,240,.42),rgba(157,184,255,.3)) no-repeat 0 94% / 0 .3em;
@@ -548,7 +542,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
     </ul>
   </article>
 </div>
-<p class="aviso"><b>Ojo al leer la anual.</b> En varias sesiones el propio equipo detecta en directo que la cuota anual presentada no salía más barata que doce mensualidades. Parte del rechazo a la anual viene de ahí; los argumentos de flexibilidad, en cambio, aparecen con independencia del error.</p>
+<p class="aviso"><b>Ojo con la cuota anual.</b> En varias sesiones el propio equipo detecta en directo que la cuota anual presentada no salía más barata que doce mensualidades. Parte del rechazo a la anual viene de ahí; los argumentos de flexibilidad, en cambio, aparecen con independencia del error.</p>
 </section>
 <section class="sec" id="condiciones">
   <div class="s-head">
@@ -1162,7 +1156,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
   </ul>
 </article>
 </div>
-<figure class="block-figure">
+<figure class="block-figure" data-secs="11">
   <img src="Assets/meme-pago-20e.webp" width="2000" height="1056" alt="Meme ilustrativo: participante señalándose la cabeza junto a la cita «Si yo pago 20€ y me das productos que son 20€, probablemente no lo haría [...] Si pago 20€ y me estáis dando productos por valor de 40, pues a lo mejor digo que sí, y más si tengo opción a elegir»." loading="lazy">
 </figure>
 </section>
@@ -2141,6 +2135,8 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
     var memeTimer = document.createElement('i');
     memeTimer.className = 'meme-timer';
     memeTimer.setAttribute('aria-hidden', 'true');
+    var memeSecs = parseFloat(meme.getAttribute('data-secs')) || 6;   // segundos visible (por defecto 6)
+    memeTimer.style.setProperty('--meme-secs', memeSecs + 's');
     meme.appendChild(memeTimer);
     var mio = new IntersectionObserver(function (entries) {
       if (!entries.some(function (en) { return en.isIntersecting; })) { return; }
@@ -2156,7 +2152,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
           meme.style.borderWidth = '0px';
         }, 450);
         setTimeout(function () { meme.hidden = true; }, 1400);
-      }, 900 + 6000);   // 0,9 s de entrada + 6 s visible
+      }, 900 + memeSecs * 1000);   // 0,9 s de entrada + tiempo visible
     }, { threshold: 0.5 });
     // la cuenta atrás no empieza hasta que la imagen ha cargado
     var memeImg = meme.querySelector('img');
